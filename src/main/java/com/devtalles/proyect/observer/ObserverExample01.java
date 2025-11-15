@@ -10,17 +10,24 @@ import java.util.Objects;
 
 public class ObserverExample01 {
     public static void main(String[] args) {
-        Observable<String> courseStream = Observable.fromIterable(Arrays.asList("HTML", "CSS", null, "C#").stream().filter(Objects::nonNull).toList());
+        Observable<String> courseStream = Observable.fromIterable(Arrays.asList("HTML", "CSS", null, "C#", "C").stream().filter(Objects::nonNull).toList());
 
-        Observer<String> observer = new Observer<String>() {
+        Observer<String> observer = new Observer<>() {
+            private Disposable disposable;
+
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                System.out.println("Estoy susscrito");
+                this.disposable = d;
+                System.out.println("Estoy suscrito");
             }
 
             @Override
             public void onNext(@NonNull String s) {
-                System.out.println("Recibi: " + s);
+                if(s.equalsIgnoreCase("c")){
+                    disposable.dispose();
+                } else{
+                    System.out.println("Recibi: " + s);
+                }
             }
 
             @Override
